@@ -42,7 +42,7 @@ resource "aws_lb_listener" "http_listener" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.cat_gif.arn
+    target_group_arn = aws_lb_target_group.clumsy_bird.arn
   }
 }
 
@@ -52,13 +52,13 @@ resource "aws_lb_listener_rule" "cat_gif_listener_rule" {
 
   condition{
     path_pattern {
-        values = ["/clumsy-bird"]
+        values = ["/generate-cat-gif"]
     }
     
   }
 
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.clumsy_bird.arn
+    target_group_arn = aws_lb_target_group.cat_gif.arn
   }
 }
