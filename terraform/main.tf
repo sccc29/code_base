@@ -132,3 +132,13 @@ resource "aws_route_table_association" "private_b" {
   route_table_id = aws_route_table.private.id
 
 }
+
+## ECS Cluster
+resource "aws_ecs_cluster" "main" {
+  name = "demo-cluster"
+}
+
+resource "aws_ecs_repository" "cat_gif_generator" {
+  name = "cat-gif-generator"
+  
+}
