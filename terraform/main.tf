@@ -142,3 +142,131 @@ resource "aws_ecr_repository" "cat_gif_generator" {
   name = "cat-gif-generator"
   
 }
+
+
+
+# IAM Roles & Policies
+
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name = "ecsTaskExecutionRole"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Principal": { "Service": "ecs-tasks.amazonaws.com" },
+    "Action": "sts:AssumeRole"
+  }]
+}
+EOF
+}
+
+resource "aws_iam_policy_attachment" "ecs_task_execution_role_policy" {
+  name       = "ecs-task-execution-policy"
+  roles      = [aws_iam_role.ecs_task_execution_role.name]
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_iam_policy" "ecr_pull_policy" {
+  name        = "ECRPullPolicy"
+  description = "Allows ECS task to pull images from ECR"
+  
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["ecr:GetAuthorizationToken"]
+        Resource = "*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = [
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage"
+        ]
+        Resource = aws_ecr_repository.cat_gif_generator.arn
+      },
+      {
+      Effect   = "Allow"
+      Action   = [
+        "s3:GetObject",
+    ]
+    Resource = "arn:aws:s3:::prod-${var.aws_region}-starport-layer-bucket/*"
+  }
+]
+})
+}
+
+resource "aws_iam_role_policy_attachment" "ecr_pull" {
+  policy_arn = aws_iam_policy.ecr_pull_policy.arn
+  role       = aws_iam_role.ecs_task_execution_role.name
+}
+
+
+# Security Group
+#-------------------------
+resource "aws_security_group" "ecs_sg" {
+  name_prefix = "ecs-sg-"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+#-------------------------
+# Load Balancer
+#-------------------------
+resource "aws_lb" "main" {
+  name               = "main"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.ecs_sg.id]
+  subnets            = [aws_subnet.public_a.id, aws_subnet.public_b.id]
+}
+
+resource "aws_lb_target_group" "cat_gif" {
+  name     = "cat-gif"
+  port     = 8000
+  protocol = "HTTP"
+  target_type = "ip"
+  vpc_id   = aws_vpc.main.id
+}
+
+
+
+resource "aws_lb_listener" "main" {
+  load_balancer_arn = aws_lb.main.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.cat_gif.arn
+  }
+}
