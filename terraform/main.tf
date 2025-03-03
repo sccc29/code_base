@@ -138,7 +138,7 @@ resource "aws_ecs_cluster" "main" {
   name = "demo-cluster"
 }
 
-resource "aws_ecs_repository" "cat_gif_generator" {
+resource "aws_ecr_repository" "cat_gif_generator" {
   name = "cat-gif-generator"
   
 }
