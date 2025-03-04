@@ -1,0 +1,27 @@
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /src/clumsy-bird
+
+# Install dependencies for Alpine
+RUN apk add --no-cache git
+
+# Clone Clumsy Bird repository
+RUN git clone https://github.com/ellisonleao/clumsy-bird.git /src/clumsy-bird
+
+# Ensure correct permissions
+RUN chmod -R 755 /src/clumsy-bird && \
+    chown -R node:node /src/clumsy-bird
+
+# Switch to non-root user for security
+USER node
+
+# Install project dependencies, including Grunt
+RUN npm install --production
+RUN npm install --save-dev grunt-cli grunt
+
+# Expose port 8001
+EXPOSE 8001
+
+# Start the game server and log output
+CMD ["npx", "grunt", "connect", "--gruntfile", "/src/clumsy-bird/Gruntfile.js", "-f"]

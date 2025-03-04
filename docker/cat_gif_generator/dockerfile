@@ -1,0 +1,16 @@
+FROM python:3.9-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install dependencies
+RUN pip install --no-cache-dir boto3 pillow requests flask
+
+# Copy the cat GIF generator script
+COPY ./scripts/cat_gif_generator.py .
+
+# Expose port for the Flask app
+EXPOSE 8000
+
+# Start the Flask server
+CMD ["python", "cat_gif_generator.py"]
