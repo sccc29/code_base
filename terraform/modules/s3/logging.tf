@@ -19,7 +19,7 @@ resource "aws_s3_bucket_logging" "main" {
   target_prefix = "log/"
 }
 
-resource "aws_s3_bucket_logging" "main" {
+resource "aws_s3_bucket_logging" "log_bucket" {
   bucket = aws_s3_bucket.log_bucket.id
 
   target_bucket = aws_s3_bucket.log_bucket.id
