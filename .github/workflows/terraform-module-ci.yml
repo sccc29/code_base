@@ -55,11 +55,11 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: terraform/modules/s3/tests # Adjusted path to test directory
+        working-directory: terraform/modules/s3 # Adjusted path to test directory
 
       - name: Run Terraform Test
         run: terraform test
-        working-directory: terraform/modules/s3/tests # Adjusted path to test directory
+        working-directory: terraform/modules/s3 # Adjusted path to test directory
 
       - name: Upload Test Results (Optional)
         if: failure()
