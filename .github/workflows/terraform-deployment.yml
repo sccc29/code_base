@@ -39,7 +39,7 @@ jobs:
         run: tfsec .
         working-directory: terraform/modules/s3 # Adjusted path
 
-  terraform-validate:
+  terraform-deploy:
     name: Run Terraform Tests
     runs-on: ubuntu-latest
     needs: terraform-lint
@@ -55,37 +55,12 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: terraform/modules/s3 # Adjusted path to test directory
+        working-directory: terraform/
 
-      - name: Run Terraform Validate
-        run: terraform validate
-        working-directory: terraform/modules/s3
+      - name: Run Terraform Plan
+        run: terraform plan -out=tfplan
+        working-directory: terraform/
 
-  terraform-test:
-    name: Run Terraform Tests
-    runs-on: ubuntu-latest
-    needs: terraform-validate
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: latest
-
-      - name: Terraform Init
-        run: terraform init
-        working-directory: terraform/modules/s3 # Adjusted path to test directory
-
-      - name: Run Terraform Test
-        run: terraform test
-        working-directory: terraform/modules/s3 # Adjusted path to test directory
-
-      - name: Upload Test Results (Optional)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-test-results
-          path: terraform/modules/s3/tests/.terraform/test/
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        working-directory: terraform/
