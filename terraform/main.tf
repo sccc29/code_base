@@ -18,7 +18,7 @@ resource "aws_ecs_task_definition" "cat_gif" {
       memory    = 512,
       essential = true,
       environment = [
-        { "name" : "API_KEY", "value" : "${var.api_key}" }
+        { "name" : "API_KEY", "value" : var.api_key }
       ],
       portMappings = [
         {
