@@ -9,10 +9,3 @@ variable "kms_enabled" {
   type        = bool
   default     = false
 }
-
-variable "kms_key_id" {
-  description = "The KMS key ID"
-  type        = string
-  default     = ""
-
-}
