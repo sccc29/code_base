@@ -12,13 +12,19 @@ resource "aws_s3_bucket_ownership_controls" "log_bucket" {
 
 
 
-resource "aws_s3_bucket_logging" "main2" {
+resource "aws_s3_bucket_logging" "main" {
   bucket = aws_s3_bucket.main.id
 
   target_bucket = aws_s3_bucket.log_bucket.id
   target_prefix = "log/"
 }
 
+resource "aws_s3_bucket_logging" "main" {
+  bucket = aws_s3_bucket.log_bucket.id
+
+  target_bucket = aws_s3_bucket.log_bucket.id
+  target_prefix = "self-log/"
+}
 
 resource "aws_s3_bucket_public_access_block" "log_bucket" {
   bucket = aws_s3_bucket.log_bucket.id
