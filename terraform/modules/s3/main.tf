@@ -9,13 +9,6 @@ resource "aws_s3_bucket_ownership_controls" "main" {
   }
 }
 
-resource "aws_s3_bucket_acl" "main" {
-  depends_on = [aws_s3_bucket_ownership_controls.main]
-
-  bucket = aws_s3_bucket.main.id
-  acl    = "private"
-}
-
 resource "aws_s3_bucket_versioning" "versioning_main" {
   bucket = aws_s3_bucket.main.id
   versioning_configuration {
@@ -38,4 +31,13 @@ resource "aws_kms_key" "mykey" {
   for_each                = var.kms_enabled ? toset([var.bucket_name]) : toset([])
   description             = "This key is used to encrypt bucket objects"
   deletion_window_in_days = 10
+}
+
+resource "aws_s3_bucket_public_access_block" "main" {
+  bucket = aws_s3_bucket.main.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
