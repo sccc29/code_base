@@ -1,50 +1,72 @@
-# Terraform Project
+# Terraform Infrastructure for AWS ECS Deployment
 
-This repository contains the Terraform configuration files for managing infrastructure for vpc, ecs, logging, and iam. It deploys two tasks on ecs fargate on the same cluster accessible through the alb once deployed, Clumsy Bird and Cat gif generator.
+## Overview
+This Terraform project provisions an AWS infrastructure, including networking, security groups, load balancing, and an ECS cluster for deploying containerized applications. The deployment is configured using multiple Terraform modules and resources.
 
 ## Prerequisites
+Before using this Terraform configuration, ensure that you have the following:
 
-- [Terraform](https://www.terraform.io/downloads.html) v1.0.0 or later
-- [AWS CLI](https://aws.amazon.com/cli/) configured with appropriate credentials
+- [Terraform](https://www.terraform.io/downloads.html) installed
+- AWS credentials configured with necessary permissions
+- A valid AWS account
+- [GitHub Actions](https://github.com/features/actions) (if deploying via CI/CD)
 
-## Getting Started
+## File Structure
 
-1. **Clone the repository:**
-    ```sh
-    git clone https://github.com/yourusername/your-repo.git
-    cd your-repo
-    ```
+```
+├── main.tf            # Main Terraform configuration
+├── provider.tf        # AWS provider configuration
+├── variables.tf       # Input variables
+├── terraform.tfvars   # Variable values
+├── network.tf         # VPC, subnets, and networking resources
+├── sg.tf              # Security groups
+├── lb.tf              # Load Balancer configuration
+├── ecs_cluster.tf     # ECS Cluster setup
+├── outputs.tf         # Output variables
+```
 
-2. **Initialize Terraform:**
-    ```sh
-    terraform init
-    ```
+## Usage
 
-3. **Plan the infrastructure changes:**
-    ```sh
-    terraform plan
-    ```
+### 1. Initialize Terraform
+Run the following command to initialize Terraform and download required providers and modules:
+```sh
+terraform init
+```
 
-4. **Apply the infrastructure changes:**
-    ```sh
-    terraform apply
-    ```
+### 2. Plan Infrastructure
+To preview the changes Terraform will make, run:
+```sh
+terraform plan
+```
 
-## Project Structure
+### 3. Apply Configuration
+To create the resources defined in the configuration, execute:
+```sh
+terraform apply -auto-approve
+```
 
-- `main.tf`: Main configuration file
-- `variables.tf`: Input variable definitions
-- `outputs.tf`: Output values
-- `provider.tf`: Provider configurations
+### 4. Destroy Infrastructure
+To delete all provisioned resources, run:
+```sh
+terraform destroy -auto-approve
+```
 
-## Contributing
+## Resources Created
+This Terraform configuration provisions the following AWS resources:
 
-Contributions are welcome! Please open an issue or submit a pull request.
+- **VPC & Subnets**: A dedicated VPC with public and private subnets.
+- **Security Groups**: Security groups for controlling inbound and outbound traffic.
+- **Load Balancer**: An AWS Application Load Balancer (ALB) for routing traffic.
+- **ECS Cluster**: An Amazon ECS cluster for running containerized workloads.
 
-## License
+## Outputs
+The following outputs are available after deployment:
+- Load balancer DNS name
+- ECS cluster name
+- VPC ID
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+## CI/CD Integration
+This configuration can be deployed using GitHub Actions, integrating Terraform into your CI/CD pipeline.
 
-## Contact
 
-For any questions, please contact [your-email@example.com](mailto:your-email@example.com).
+
