@@ -2,7 +2,12 @@ name: Terraform Module
 
 on:
   push:
+    paths:
+    - 'terraform/modules/**' #
   pull_request:
+    paths:
+    - 'terraform/modules/**' #
+
 
 permissions:
   contents: read

@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - "**"
+    paths:
+      - 'terraform/**'
   pull_request:
     branches:
       - main
+    paths:
+      - 'terraform/**'
 
 permissions:
   contents: read
