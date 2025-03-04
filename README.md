@@ -7,6 +7,7 @@ Really cool project choice looking forward to meeting with all of you.
 ## Backlog
 
 Remediate TFSEC Findings
+Add DNS
 Develop Modules
     Create network module
     Create lb module
