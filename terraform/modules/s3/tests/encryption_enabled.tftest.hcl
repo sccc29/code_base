@@ -35,10 +35,26 @@ run "bucket_private" {
   }
 
   assert {
-    condition     = aws_s3_bucket_acl.main.acl == "private"
+    condition     = aws_s3_bucket_public_access_block.main.block_public_acls  == true
     error_message = "S3 bucket is not private."
   }
+
+    assert {
+        condition     = aws_s3_bucket_public_access_block.main.block_public_policy == true
+        error_message = "S3 bucket is not private."
+    }
+
+    assert {
+        condition     = aws_s3_bucket_public_access_block.main.ignore_public_acls == true
+        error_message = "S3 bucket is not private."
+    }
+
+    assert {
+        condition     = aws_s3_bucket_public_access_block.main.restrict_public_buckets == true
+        error_message = "S3 bucket is not private."
+    }
 }
+
 
 run "ownership_control" {
   command = plan
