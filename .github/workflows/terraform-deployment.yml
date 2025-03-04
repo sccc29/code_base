@@ -58,6 +58,12 @@ jobs:
         with:
           terraform_version: latest
 
+      - name: Configure AWS Credentials
+        run: |
+          echo "Setting up AWS credentials..."
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+
       - name: Terraform Init
         run: terraform init
         working-directory: terraform/
@@ -65,6 +71,13 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -out=tfplan
         working-directory: terraform/
+
+      - name: Upload Terraform Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan
+          path: terraform/tfplan
+          retention-days: 1
 
   terraform-apply:
     name: Terraform Apply
@@ -80,3 +93,24 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: latest
+
+      - name: Configure AWS Credentials
+        run: |
+          echo "Setting up AWS credentials..."
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-plan
+          path: terraform/
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: terraform/
+
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        working-directory: terraform/

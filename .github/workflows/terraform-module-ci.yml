@@ -40,7 +40,7 @@ jobs:
         working-directory: terraform/modules/s3 # Adjusted path
 
   terraform-validate:
-    name: Run Terraform Tests
+    name: Run Terraform Validate
     runs-on: ubuntu-latest
     needs: terraform-lint
 
@@ -74,6 +74,12 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: latest
+
+      - name: Configure AWS Credentials
+        run: |
+          echo "Setting up AWS credentials..."
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
 
       - name: Terraform Init
         run: terraform init
