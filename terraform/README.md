@@ -1,6 +1,6 @@
 # Terraform Project
 
-This repository contains the Terraform configuration files for managing infrastructure.
+This repository contains the Terraform configuration files for managing infrastructure for vpc, ecs, logging, and iam. It deploys two tasks on ecs fargate on the same cluster accessible through the alb once deployed, Clumsy Bird and Cat gif generator.
 
 ## Prerequisites
 
