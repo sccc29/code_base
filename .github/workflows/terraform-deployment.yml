@@ -2,7 +2,11 @@ name: Terraform CI
 
 on:
   push:
+    branches:
+      - "**"
   pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -39,10 +43,11 @@ jobs:
         run: tfsec .
         working-directory: terraform/modules/s3 # Adjusted path
 
-  terraform-deploy:
-    name: Run Terraform Tests
+  terraform-plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
     needs: terraform-lint
+    if: github.event_name == 'push' 
 
     steps:
       - name: Checkout Repository
@@ -57,10 +62,21 @@ jobs:
         run: terraform init
         working-directory: terraform/
 
-      - name: Run Terraform Plan
+      - name: Terraform Plan
         run: terraform plan -out=tfplan
         working-directory: terraform/
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
-        working-directory: terraform/
+  terraform-apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+    needs: terraform-plan
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' 
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: latest
