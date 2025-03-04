@@ -26,11 +26,11 @@ resource "aws_lb_target_group" "cat_gif" {
 }
 
 resource "aws_lb_target_group" "clumsy_bird" {
-  name     = "clumsy-bird-tg"
-  port     = 8001
-  protocol = "HTTP"
+  name        = "clumsy-bird-tg"
+  port        = 8001
+  protocol    = "HTTP"
   target_type = "ip"
-  vpc_id   = aws_vpc.main.id
+  vpc_id      = aws_vpc.main.id
 }
 
 
@@ -50,11 +50,11 @@ resource "aws_lb_listener_rule" "cat_gif_listener_rule" {
   listener_arn = aws_lb_listener.http_listener.arn
   priority     = 100
 
-  condition{
+  condition {
     path_pattern {
-        values = ["/generate-cat-gif"]
+      values = ["/generate-cat-gif"]
     }
-    
+
   }
 
   action {

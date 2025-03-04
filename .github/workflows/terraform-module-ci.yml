@@ -1,0 +1,69 @@
+name: Terraform CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform-lint:
+    name: Terraform Lint & Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: latest
+
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+          tflint --version
+
+      - name: Run TFLint
+        run: tflint --init && tflint --format compact
+        working-directory: terraform/modules/s3 # Adjusted path
+
+      - name: Install TFSec
+        run: |
+          curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
+          tfsec --version
+
+      - name: Run TFSec Security Scan
+        run: tfsec .
+        working-directory: terraform/modules/s3 # Adjusted path
+
+  terraform-test:
+    name: Run Terraform Tests
+    runs-on: ubuntu-latest
+    needs: terraform-lint
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: latest
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: terraform/modules/s3/tests # Adjusted path to test directory
+
+      - name: Run Terraform Test
+        run: terraform test
+        working-directory: terraform/modules/s3/tests # Adjusted path to test directory
+
+      - name: Upload Test Results (Optional)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-test-results
+          path: terraform/modules/s3/tests/.terraform/test/

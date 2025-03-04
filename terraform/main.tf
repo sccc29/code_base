@@ -72,7 +72,7 @@ resource "aws_ecs_task_definition" "clumsy_bird" {
   cpu                      = "256"
   runtime_platform {
     operating_system_family = "LINUX"
-    cpu_architecture = "ARM64"
+    cpu_architecture        = "ARM64"
   }
 
   container_definitions = jsonencode([
@@ -102,11 +102,11 @@ resource "aws_ecs_task_definition" "clumsy_bird" {
 
 
 resource "aws_ecs_service" "clumsy_bird_service" {
-  name            = "clumsy-bird-service"
-  cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.clumsy_bird.arn
-  launch_type     = "FARGATE"
-  desired_count = 1
+  name                 = "clumsy-bird-service"
+  cluster              = aws_ecs_cluster.main.id
+  task_definition      = aws_ecs_task_definition.clumsy_bird.arn
+  launch_type          = "FARGATE"
+  desired_count        = 1
   force_new_deployment = true
 
 
