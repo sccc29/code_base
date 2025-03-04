@@ -32,7 +32,7 @@ jobs:
 
       - name: Run TFLint
         run: tflint --init && tflint --format compact
-        working-directory: terraform/modules/s3 # Adjusted path
+        working-directory: terraform/ # Adjusted path
 
       - name: Install TFSec
         run: |
@@ -41,7 +41,7 @@ jobs:
 
       - name: Run TFSec Security Scan
         run: tfsec .
-        working-directory: terraform/modules/s3 # Adjusted path
+        working-directory: terraform/ # Adjusted path
 
   terraform-plan:
     name: Terraform Plan
