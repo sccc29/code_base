@@ -43,7 +43,7 @@ resource "aws_ecs_service" "cat_gif" {
   cluster              = aws_ecs_cluster.main.id
   task_definition      = aws_ecs_task_definition.cat_gif.arn
   launch_type          = "FARGATE"
-  desired_count        = 1
+  desired_count        = 0
   force_new_deployment = true
 
   network_configuration {
@@ -106,7 +106,7 @@ resource "aws_ecs_service" "clumsy_bird_service" {
   cluster              = aws_ecs_cluster.main.id
   task_definition      = aws_ecs_task_definition.clumsy_bird.arn
   launch_type          = "FARGATE"
-  desired_count        = 1
+  desired_count        = 0
   force_new_deployment = true
 
 
