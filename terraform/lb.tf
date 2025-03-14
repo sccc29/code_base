@@ -6,7 +6,7 @@ resource "aws_lb" "main" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.ecs_sg.id]
-  subnets            = [for subnet in aws_subnet.public : subnet.id]
+  subnets            = module.vpc.public_subnet_ids
 }
 
 resource "aws_lb_target_group" "cat_gif" {
@@ -14,7 +14,7 @@ resource "aws_lb_target_group" "cat_gif" {
   port        = 8000
   protocol    = "HTTP"
   target_type = "ip"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
   health_check {
     path                = "/generate-cat-gif"
     interval            = 30
@@ -30,7 +30,7 @@ resource "aws_lb_target_group" "clumsy_bird" {
   port        = 8001
   protocol    = "HTTP"
   target_type = "ip"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 }
 
 
