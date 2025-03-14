@@ -263,9 +263,6 @@ resource "aws_s3_bucket_policy" "cloudtrail_policy" {
     ]
   })
 }
-data "aws_caller_identity" "current" {
-
-}
 
 # ------------------------------
 # CloudWatch Log Metric Filter
