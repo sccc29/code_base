@@ -1,4 +1,6 @@
 variable "app_prefix" {
+  type = string
+  description = "service/app prefix"
   default = "cat-gif"
 
 }

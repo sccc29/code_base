@@ -17,13 +17,6 @@ variable "public_subnets" {
 
 }
 
-
-variable "aws_region" {
-  description = "The AWS region to deploy to"
-  type        = string
-  default     = "us-east-1"
-
-}
 variable "cidr_block" {
   description = "The CIDR block for the VPC"
   type        = string
