@@ -5,15 +5,15 @@ resource "aws_ecs_cluster" "main" {
 
 # ECR Repository
 
-# resource "aws_ecr_repository" "main" {
-#   for_each = {var.service}
-#   name                 = "cat-gif-generator"
-#   image_tag_mutability = "IMMUTABLE"
-#   # image_scanning_configuration {
-#   #   scan_on_push = true
-#   # }
+resource "aws_ecr_repository" "main" {
+  for_each = var.service
+  name                 = each.key
+  image_tag_mutability = "IMMUTABLE"
+  # image_scanning_configuration {
+  #   scan_on_push = true
+  # }
 
-# }
+}
 
 # resource "aws_ecr_repository" "clumsy_bird" {
 #   name                 = "clumsy-bird"
@@ -47,3 +47,4 @@ resource "aws_iam_role_policy_attachment" "ecr_pull" {
   policy_arn = aws_iam_policy.ecr_pull_policy.arn
   role       = aws_iam_role.ecs_task_execution_role.name
 }
+

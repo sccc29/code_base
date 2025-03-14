@@ -23,3 +23,13 @@ moved {
     to = module.ecs.aws_iam_role_policy_attachment.ecr_pull
 }
 
+moved {
+    from = aws_ecr_repository.cat_gif_generator
+    to = module.ecs.aws_ecr_repository.main["cat-gif-generator"]
+
+}
+
+moved {
+    from = aws_ecr_repository.clumsy_bird
+    to = module.ecs.aws_ecr_repository.main["clumsy-bird"]
+}

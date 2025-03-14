@@ -9,7 +9,7 @@ resource "aws_ecs_task_definition" "cat_gif" {
   family                   = "${var.app_prefix}-task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = module.ecs.ecs_iam_role_arn
   memory                   = "512"
   cpu                      = "256"
   runtime_platform {
@@ -20,7 +20,7 @@ resource "aws_ecs_task_definition" "cat_gif" {
   container_definitions = jsonencode([
     {
       name      = "${var.app_prefix}-generator",
-      image     = "${aws_ecr_repository.cat_gif_generator.repository_url}:latest",
+      image     = "${module.ecs.ecr_repository_url.cat-gif-generator}:latest",
       cpu       = 256,
       memory    = 512,
       essential = true,
@@ -47,7 +47,7 @@ resource "aws_ecs_task_definition" "cat_gif" {
 
 resource "aws_ecs_service" "cat_gif" {
   name                 = "${var.app_prefix}-service"
-  cluster              = aws_ecs_cluster.main.id
+  cluster              = module.ecs.ecs_cluster_id
   task_definition      = aws_ecs_task_definition.cat_gif.arn
   launch_type          = "FARGATE"
   desired_count        = 0
@@ -74,7 +74,7 @@ resource "aws_ecs_task_definition" "clumsy_bird" {
   family                   = "clumsy-bird"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = module.ecs.ecs_iam_role_arn
   memory                   = "512"
   cpu                      = "256"
   runtime_platform {
@@ -85,7 +85,7 @@ resource "aws_ecs_task_definition" "clumsy_bird" {
   container_definitions = jsonencode([
     {
       name      = "clumsy-bird",
-      image     = "${aws_ecr_repository.clumsy_bird.repository_url}:latest",
+      image     = "${module.ecs.ecr_repository_url.clumsy-bird}:latest",
       cpu       = 256,
       memory    = 512,
       essential = true,
@@ -110,7 +110,7 @@ resource "aws_ecs_task_definition" "clumsy_bird" {
 
 resource "aws_ecs_service" "clumsy_bird_service" {
   name                 = "clumsy-bird-service"
-  cluster              = aws_ecs_cluster.main.id
+  cluster              = module.ecs.ecs_cluster_id
   task_definition      = aws_ecs_task_definition.clumsy_bird.arn
   launch_type          = "FARGATE"
   desired_count        = 0
