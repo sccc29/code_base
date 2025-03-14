@@ -54,7 +54,7 @@ resource "aws_ecs_service" "cat_gif" {
   force_new_deployment = true
 
   network_configuration {
-    subnets         = [for subnet in aws_subnet.private : subnet.id]
+    subnets         = module.vpc.private_subnet_ids
     security_groups = [aws_security_group.ecs_sg.id]
   }
 
@@ -119,7 +119,7 @@ resource "aws_ecs_service" "clumsy_bird_service" {
 
 
   network_configuration {
-    subnets         = [for subnet in aws_subnet.private : subnet.id]
+    subnets         = module.vpc.private_subnet_ids
     security_groups = [aws_security_group.ecs_sg.id]
     # assign_public_ip = true
   }
