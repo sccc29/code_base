@@ -1,6 +1,6 @@
 variable "app_prefix" {
   default = "cat-gif"
-  
+
 }
 
 resource "aws_ecs_task_definition" "cat_gif" {

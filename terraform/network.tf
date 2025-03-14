@@ -110,18 +110,6 @@ resource "aws_iam_role" "vpc_flow_logs_role" {
   name = "VPCFlowLogsRole"
 
   assume_role_policy = data.aws_iam_policy_document.vpc_flow_logs_sts.json
-  # assume_role_policy = jsonencode({
-  #   Version = "2012-10-17"
-  #   Statement = [
-  #     {
-  #       Action = "sts:AssumeRole"
-  #       Effect = "Allow"
-  #       Principal = {
-  #         Service = "vpc-flow-logs.amazonaws.com"
-  #       }
-  #     }
-  #   ]
-  # })
 }
 
 resource "aws_iam_role_policy" "vpc_flow_logs_policy" {
@@ -129,26 +117,6 @@ resource "aws_iam_role_policy" "vpc_flow_logs_policy" {
   role = aws_iam_role.vpc_flow_logs_role.id
 
   policy = data.aws_iam_policy_document.vpc_flow_logs.json
-
-  # policy = jsonencode({
-  #   Version = "2012-10-17"
-  #   Statement = [
-  #     {
-  #       Action = [
-  #         "logs:CreateLogGroup",
-  #         "logs:CreateLogStream",
-  #         "logs:PutLogEvents",
-  #         "logs:DescribeLogGroups",
-  #         "logs:DescribeLogStreams",
-  #       ]
-  #       Effect = "Allow"
-  #       Resource = [
-  #         aws_cloudwatch_log_group.vpc_flow_logs.arn,
-  #         "${aws_cloudwatch_log_group.vpc_flow_logs.arn}:*"
-  #       ]
-  #     }
-  #   ]
-  # })
 }
 
 
@@ -185,18 +153,7 @@ resource "aws_iam_role" "cloud_trail" {
   name = "CloudTrailRole"
 
   assume_role_policy = data.aws_iam_policy_document.vpc_cloudtrail_logs_sts.json
-  # assume_role_policy = jsonencode({
-  #   Version = "2012-10-17"
-  #   Statement = [
-  #     {
-  #       Action = "sts:AssumeRole"
-  #       Effect = "Allow"
-  #       Principal = {
-  #         Service = "cloudtrail.amazonaws.com"
-  #       }
-  #     }
-  #   ]
-  # })
+
 
 }
 
@@ -205,25 +162,7 @@ resource "aws_iam_role_policy" "cloud_trail_policy" {
   role = aws_iam_role.cloud_trail.id
 
   policy = data.aws_iam_policy_document.vpc_cloudtrail_logs.json
-  # policy = jsonencode({
-  #   Version = "2012-10-17"
-  #   Statement = [
-  #     {
-  #       Action = [
-  #         "logs:CreateLogGroup",
-  #         "logs:CreateLogStream",
-  #         "logs:PutLogEvents",
-  #         "logs:DescribeLogGroups",
-  #         "logs:DescribeLogStreams",
-  #       ]
-  #       Effect = "Allow"
-  #       Resource = [
-  #         aws_cloudwatch_log_group.cloud_trail.arn,
-  #         "${aws_cloudwatch_log_group.cloud_trail.arn}:*"
-  #       ]
-  #     }
-  #   ]
-  # })
+
 
 }
 
@@ -239,36 +178,6 @@ resource "aws_s3_bucket_policy" "cloudtrail_policy" {
 
   policy = data.aws_iam_policy_document.vpc_cloudtrail_bucket_logs.json
 
-  # policy = jsonencode({
-  #   "Version" : "2012-10-17",
-  #   "Statement" : [
-  #     {
-  #       "Sid" : "AWSCloudTrailAclCheck20150319",
-  #       "Effect" : "Allow",
-  #       "Principal" : { "Service" : "cloudtrail.amazonaws.com" },
-  #       "Action" : "s3:GetBucketAcl",
-  #       "Resource" : aws_s3_bucket.cloudtrail_logs.arn,
-  #       "Condition" : {
-  #         "StringEquals" : {
-  #           "aws:SourceArn" : "arn:aws:cloudtrail:us-east-1:${data.aws_caller_identity.current.account_id}:trail/networking-trail"
-  #         }
-  #       }
-  #     },
-  #     {
-  #       "Sid" : "AWSCloudTrailWrite20150319",
-  #       "Effect" : "Allow",
-  #       "Principal" : { "Service" : "cloudtrail.amazonaws.com" },
-  #       "Action" : "s3:PutObject",
-  #       "Resource" : "${aws_s3_bucket.cloudtrail_logs.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
-  #       "Condition" : {
-  #         "StringEquals" : {
-  #           "s3:x-amz-acl" : "bucket-owner-full-control",
-  #           "aws:SourceArn" : "arn:aws:cloudtrail:us-east-1:${data.aws_caller_identity.current.account_id}:trail/networking-trail"
-  #         }
-  #       }
-  #     }
-  #   ]
-  # })
 }
 
 # ------------------------------

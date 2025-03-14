@@ -6,7 +6,7 @@ resource "aws_ecs_cluster" "main" {
 # ECR Repository
 
 resource "aws_ecr_repository" "cat_gif_generator" {
-  name = "cat-gif-generator"
+  name                 = "cat-gif-generator"
   image_tag_mutability = "IMMUTABLE"
   # image_scanning_configuration {
   #   scan_on_push = true
@@ -15,7 +15,7 @@ resource "aws_ecr_repository" "cat_gif_generator" {
 }
 
 resource "aws_ecr_repository" "clumsy_bird" {
-  name = "clumsy-bird"
+  name                 = "clumsy-bird"
   image_tag_mutability = "IMMUTABLE"
 }
 
@@ -25,16 +25,16 @@ resource "aws_ecr_repository" "clumsy_bird" {
 resource "aws_iam_role" "ecs_task_execution_role" {
   name               = "ecsTaskExecutionRole"
   assume_role_policy = data.aws_iam_policy_document.ecs_assume_role.json
-#   assume_role_policy = <<EOF
-# {
-#   "Version": "2012-10-17",
-#   "Statement": [{
-#     "Effect": "Allow",
-#     "Principal": { "Service": "ecs-tasks.amazonaws.com" },
-#     "Action": "sts:AssumeRole"
-#   }]
-# }
-# EOF
+  #   assume_role_policy = <<EOF
+  # {
+  #   "Version": "2012-10-17",
+  #   "Statement": [{
+  #     "Effect": "Allow",
+  #     "Principal": { "Service": "ecs-tasks.amazonaws.com" },
+  #     "Action": "sts:AssumeRole"
+  #   }]
+  # }
+  # EOF
 }
 
 resource "aws_iam_policy_attachment" "ecs_task_execution_role_policy" {
@@ -47,7 +47,7 @@ resource "aws_iam_policy" "ecr_pull_policy" {
   name        = "ECRPullPolicy"
   description = "Allows ECS task to pull images from ECR"
 
-policy = data.aws_iam_policy_document.ecr_pull_policy.json
+  policy = data.aws_iam_policy_document.ecr_pull_policy.json
 
   # policy = jsonencode({
   #   Version = "2012-10-17"

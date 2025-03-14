@@ -13,7 +13,7 @@ variable "private_subnets" {
 variable "public_subnets" {
   description = "A map of public subnets"
   type        = map(string)
- 
+
 
 }
 
@@ -27,5 +27,5 @@ variable "aws_region" {
 variable "cidr_block" {
   description = "The CIDR block for the VPC"
   type        = string
-  
+
 }
