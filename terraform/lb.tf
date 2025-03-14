@@ -10,7 +10,7 @@ resource "aws_lb" "main" {
 }
 
 resource "aws_lb_target_group" "cat_gif" {
-  name        = "cat-gif"
+  name        = var.app_prefix
   port        = 8000
   protocol    = "HTTP"
   target_type = "ip"
